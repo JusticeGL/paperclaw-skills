@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PubmedArticleSet>
+  <PubmedArticle>
+    <MedlineCitation Status="MEDLINE">
+      <PMID>123456</PMID>
+      <Article>
+        <Journal>
+          <JournalIssue>
+            <PubDate>
+              <Year>2026</Year>
+              <Month>Jun</Month>
+              <Day>01</Day>
+            </PubDate>
+          </JournalIssue>
+          <Title>Journal of Neural Engineering</Title>
+        </Journal>
+        <ArticleTitle>Motor imagery EEG decoding for brain-computer interface control</ArticleTitle>
+        <Abstract>
+          <AbstractText>This study developed an EEG decoding approach for motor imagery brain-computer interface control.</AbstractText>
+          <AbstractText Label="SIGNIFICANCE">The abstract reports improved robustness for noninvasive BCI signal interpretation.</AbstractText>
+        </Abstract>
+        <AuthorList>
+          <Author>
+            <LastName>Chen</LastName>
+            <ForeName>Wei</ForeName>
+            <AffiliationInfo><Affiliation>Neural Engineering Lab, Example University.</Affiliation></AffiliationInfo>
+          </Author>
+        </AuthorList>
+        <ArticleIdList>
+          <ArticleId IdType="doi">10.1000/jne.001</ArticleId>
+        </ArticleIdList>
+      </Article>
+    </MedlineCitation>
+  </PubmedArticle>
+</PubmedArticleSet>

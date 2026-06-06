@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:arxiv="http://arxiv.org/schemas/atom">
+  <entry>
+    <id>http://arxiv.org/abs/2606.00001v1</id>
+    <updated>2026-06-03T00:00:00Z</updated>
+    <published>2026-06-03T00:00:00Z</published>
+    <title>Representation learning for EEG brain-computer interface decoding</title>
+    <summary>The work introduced a representation learning model for EEG signals in brain-computer interface tasks. The abstract frames the model as support for neural decoding workflows.</summary>
+    <author>
+      <name>Alex Example</name>
+      <arxiv:affiliation>Example AI Lab</arxiv:affiliation>
+    </author>
+    <link href="http://arxiv.org/abs/2606.00001v1" rel="alternate" type="text/html"/>
+    <link title="pdf" href="http://arxiv.org/pdf/2606.00001v1" rel="related" type="application/pdf"/>
+    <category term="eess.SP"/>
+  </entry>
+</feed>

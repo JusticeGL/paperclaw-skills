@@ -1,0 +1,26 @@
+{
+  "collection": [
+    {
+      "doi": "10.1101/2026.06.04.000003",
+      "title": "SSVEP-based brain-computer interface classification",
+      "authors": "Wang, A.; Li, B.",
+      "author_corresponding": "Wang, A.",
+      "author_corresponding_institution": "Example Institute of Neuroscience",
+      "date": "2026-06-04",
+      "category": "neuroscience",
+      "abstract": "This preprint studied SSVEP-based brain-computer interface classification for noninvasive BCI systems.",
+      "published": "NA"
+    },
+    {
+      "doi": "10.1101/2026.06.04.weak",
+      "title": "Behavioral therapy with incidental physiology recording",
+      "authors": "Smith, C.",
+      "author_corresponding": "Smith, C.",
+      "author_corresponding_institution": "Example Clinic",
+      "date": "2026-06-04",
+      "category": "neuroscience",
+      "abstract": "This therapy study used physiology as a secondary measurement and focused on behavioral outcomes.",
+      "published": "NA"
+    }
+  ]
+}

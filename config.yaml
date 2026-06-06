@@ -1,0 +1,68 @@
+timezone: Asia/Shanghai
+window_days: 7
+
+sources:
+  pubmed: true
+  biorxiv: true
+  medrxiv: true
+  arxiv: true
+  semantic_scholar: false
+
+keywords:
+  pubmed_term: >
+    ("brain-computer interface"[tiab] OR "brain-machine interface"[tiab]
+     OR "motor imagery"[tiab] OR "EEG decoding"[tiab] OR "neural interface"[tiab])
+  arxiv_search_query: >
+    (cat:eess.SP OR cat:cs.HC OR cat:q-bio.NC OR cat:cs.LG)
+    AND (abs:"brain-computer interface" OR abs:"motor imagery" OR abs:EEG)
+  local_filter_terms:
+    - brain-computer interface
+    - brain-machine interface
+    - BCI
+    - EEG
+    - motor imagery
+    - neural decoding
+    - SSVEP
+    - P300
+
+biorxiv:
+  category: neuroscience
+
+arxiv:
+  max_results: 50
+  initial_delay_seconds: 3
+  retry_delays_seconds: [3, 10, 30]
+  rss_fallback: true
+  rss_categories: [eess.SP, cs.HC, q-bio.NC, cs.LG]
+
+journal_tiers:
+  tier1:
+    - Nature Neuroscience
+    - Nature Biomedical Engineering
+    - Brain
+  tier2:
+    - Journal of Neural Engineering
+    - IEEE Transactions on Neural Systems and Rehabilitation Engineering
+    - IEEE Transactions on Biomedical Engineering
+    - NeuroImage
+
+selection:
+  per_source_cap: 2
+  total_min: 4
+  total_max: 6
+
+ncbi:
+  tool: bci_tracker
+  email: "you@example.com"
+
+http:
+  rate_limit_per_sec: 3
+  timeout_seconds: 30
+  max_retries: 3
+  user_agent: "bci-tracker/0.1 (mailto:you@example.com)"
+
+output:
+  dir: "./output"
+  candidates_filename: "bci_candidates_{date}.json"
+  selection_filename: "selection_{date}.json"
+  final_filename: "bci_papers_raw_{date}.md"
