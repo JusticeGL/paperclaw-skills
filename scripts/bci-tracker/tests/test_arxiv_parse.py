@@ -10,7 +10,7 @@ from bci_tracker.sources.base import SourceError
 
 
 def test_arxiv_parse_extracts_entry(tmp_path, sample_config):
-    atom = Path("tests/fixtures/arxiv.atom").read_text(encoding="utf-8")
+    atom = (Path(__file__).parent / "fixtures/arxiv.atom").read_text(encoding="utf-8")
     window = compute_window("Asia/Shanghai", 7, today=date(2026, 6, 5))
     candidates = parse_arxiv_atom(atom, sample_config, window)
     assert len(candidates) == 1

@@ -6,7 +6,6 @@ build-backend = "setuptools.build_meta"
 name = "bci-tracker"
 version = "0.1.0"
 description = "Deterministic BCI/EEG paper candidate tracker and renderer"
-readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
   "requests>=2.28",

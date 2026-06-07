@@ -6,7 +6,7 @@ from bci_tracker.sources.pubmed import PubMedSource, filter_window, parse_pubmed
 
 
 def test_pubmed_parse_extracts_core_fields(tmp_path, sample_config):
-    xml = Path("tests/fixtures/pubmed_efetch.xml").read_text(encoding="utf-8")
+    xml = (Path(__file__).parent / "fixtures/pubmed_efetch.xml").read_text(encoding="utf-8")
     candidates = parse_pubmed_xml(xml, sample_config)
     assert len(candidates) == 1
     item = candidates[0]
