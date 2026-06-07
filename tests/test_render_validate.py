@@ -41,7 +41,7 @@ def pool():
 def cfg(tmp_path):
     return {
         "timezone": "Asia/Shanghai",
-        "selection": {"total_min": 4, "total_max": 6, "per_source_cap": 2},
+        "selection": {"total_min": 3, "total_max": 10},
         "output": {"dir": str(tmp_path), "final_filename": "out_{date}.md"},
     }
 
@@ -77,8 +77,8 @@ def test_render_rejects_unknown_id(tmp_path):
         render_markdown(pool(), selection(["p1", "p2", "p3", "missing"]), cfg(tmp_path))
 
 
-def test_render_rejects_source_cap(tmp_path):
+def test_render_allows_multiple_papers_from_same_source(tmp_path):
     data = pool()
     data["candidates"].append({**data["candidates"][0], "id": "p5", "doi": "10.1/p5", "source": "pubmed"})
-    with pytest.raises(RenderError, match="cap"):
-        render_markdown(data, selection(["p1", "p2", "p3", "p4", "p5"]), cfg(tmp_path))
+    text = render_markdown(data, selection(["p1", "p2", "p3", "p4", "p5"]), cfg(tmp_path))
+    assert "入选论文5" in text

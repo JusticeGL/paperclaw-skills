@@ -1,4 +1,4 @@
 interface:
   display_name: "BCI Paper Curation"
-  short_description: "Curate weekly BCI/EEG paper pools safely"
-  default_prompt: "Use $bci-paper-curation to select weekly BCI papers from bci_candidates_{date}.json."
+  short_description: "Rank daily BCI/EEG papers by impact"
+  default_prompt: "Use $bci-paper-curation to rank today's BCI/EEG candidates and render the strongest 3-10 papers."

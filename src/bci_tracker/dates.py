@@ -44,7 +44,15 @@ def parse_date(value: str | None) -> date | None:
         return date.fromisoformat(text[:10])
     except ValueError:
         pass
-    for fmt in ("%Y %b %d", "%Y %b", "%Y"):
+    for fmt in (
+        "%Y %b %d",
+        "%Y %B %d",
+        "%Y %m %d",
+        "%Y %b",
+        "%Y %B",
+        "%Y %m",
+        "%Y",
+    ):
         try:
             parsed = datetime.strptime(text, fmt)
             return parsed.date()

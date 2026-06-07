@@ -1,16 +1,16 @@
 ---
-name: bci-weekly-paper-tracker
-description: Run weekly or manual BCI/EEG paper tracking with deterministic fetching/rendering and ChatGPT 5.4 curation.
+name: bci-daily-paper-tracker
+description: Run daily or manual BCI/EEG paper tracking with deterministic fetching/rendering and ChatGPT 5.4 curation.
 model: chatgpt-5.4
 tools:
   - shell
   - filesystem
-schedule: manual_or_weekly
+schedule: manual_or_daily
 ---
 
-# BCI Weekly Paper Tracker
+# BCI Daily Paper Tracker
 
-Use this OpenClaw scenario to run the BCI paper tracking pipeline end to end.
+Use this OpenClaw scenario to run the BCI paper tracking pipeline end to end for the current business date.
 
 ## Procedure
 

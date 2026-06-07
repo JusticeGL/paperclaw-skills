@@ -7,9 +7,9 @@ The language model is only allowed to write selected IDs, two-sentence summaries
 ## Commands
 
 ```bash
-python3 -m bci_tracker.cli fetch --config config.yaml
-python3 -m bci_tracker.cli fetch --config config.yaml --dry-run
-python3 -m bci_tracker.cli render --config config.yaml --date YYYY-MM-DD
+python3 -m bci_tracker.cli --config config.yaml fetch
+python3 -m bci_tracker.cli --config config.yaml fetch --dry-run
+python3 -m bci_tracker.cli --config config.yaml render --date YYYY-MM-DD
 ```
 
 For local development without installing the package:
@@ -21,5 +21,5 @@ PYTHONPATH=src pytest
 
 ## OpenClaw
 
-The OpenClaw scenario lives at `openclaw/scenarios/bci-weekly-paper-tracker.md`.
+The OpenClaw scenario lives at `openclaw/scenarios/bci-daily-paper-tracker.md`.
 The curation skill lives at `openclaw/skills/bci-paper-curation`.

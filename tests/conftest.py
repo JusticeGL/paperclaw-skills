@@ -27,7 +27,7 @@ def sample_config(tmp_path):
             "tier1": ["Brain"],
             "tier2": ["Journal of Neural Engineering", "NeuroImage"],
         },
-        "selection": {"per_source_cap": 2, "total_min": 4, "total_max": 6},
+        "selection": {"total_min": 3, "total_max": 10},
         "ncbi": {"tool": "bci_tracker", "email": "test@example.com"},
         "http": {"rate_limit_per_sec": 1000, "timeout_seconds": 1, "max_retries": 0},
         "output": {

@@ -1,5 +1,5 @@
 timezone: Asia/Shanghai
-window_days: 7
+window_days: 0
 
 sources:
   pubmed: true
@@ -47,9 +47,8 @@ journal_tiers:
     - NeuroImage
 
 selection:
-  per_source_cap: 2
-  total_min: 4
-  total_max: 6
+  total_min: 3
+  total_max: 10
 
 ncbi:
   tool: bci_tracker
@@ -62,7 +61,7 @@ http:
   user_agent: "bci-tracker/0.1 (mailto:you@example.com)"
 
 output:
-  dir: "./output"
+  dir: "/Users/zuqiu/Documents/claw"
   candidates_filename: "bci_candidates_{date}.json"
   selection_filename: "selection_{date}.json"
   final_filename: "bci_papers_raw_{date}.md"

@@ -54,7 +54,6 @@ def validate_selection(selection: Dict[str, Any], pool: Dict[str, Any], cfg: Dic
 
     lookup = candidate_lookup(pool)
     result: list[tuple[Candidate, Dict[str, str]]] = []
-    counts: Counter[str] = Counter()
     seen_ids: set[str] = set()
     for idx, item in enumerate(selected):
         if not isinstance(item, dict):
@@ -68,7 +67,6 @@ def validate_selection(selection: Dict[str, Any], pool: Dict[str, Any], cfg: Dic
         candidate = lookup.get(cid)
         if candidate is None:
             raise RenderError(f"selected id not found in candidate pool: {cid}")
-        counts[candidate.source] += 1
         result.append(
             (
                 candidate,
@@ -78,10 +76,6 @@ def validate_selection(selection: Dict[str, Any], pool: Dict[str, Any], cfg: Dic
                 },
             )
         )
-    cap = int(limits["per_source_cap"])
-    for source, count in counts.items():
-        if count > cap:
-            raise RenderError(f"source {source!r} selected {count} papers; cap is {cap}")
     return result
 
 
@@ -123,7 +117,7 @@ def render_markdown(pool: Dict[str, Any], selection: Dict[str, Any], cfg: Dict[s
         "# BCI论文追踪原始摘要",
         f"业务日期：{pool.get('date')}",
         f"时区：{window.get('tz', cfg.get('timezone', 'Asia/Shanghai'))}",
-        f"时间范围：最近一周（{window.get('start')} 至 {window.get('end')}）",
+        f"时间范围：{window.get('start')} 至 {window.get('end')}",
         "检索来源：PubMed / bioRxiv / medRxiv / arXiv（+ 可选 Semantic Scholar）",
         "采集方式：API 优先，浏览器兜底",
         "",
@@ -158,7 +152,7 @@ def render_markdown(pool: Dict[str, Any], selection: Dict[str, Any], cfg: Dict[s
         ]
     )
     if selection.get("not_enough") or not selected:
-        note = selection.get("notes") or "最近一周内未发现足够高质量且适合纳入摘要的相关论文。"
+        note = selection.get("notes") or "当前时间窗口内未发现足够高质量且适合纳入摘要的相关论文。"
         lines.extend(["", "# 若不足：", f"- {note}"])
     return "\n".join(lines).rstrip() + "\n"
 

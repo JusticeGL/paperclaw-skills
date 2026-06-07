@@ -46,16 +46,18 @@ Reject candidates where EEG is incidental, only a side measurement, or merely ap
 
 ## Ranking Rubric
 
-Rank candidates by these priorities:
+Rank all candidates together. Do not apply a per-source cap or reserve slots for any source. Select the strongest 3-10 papers by these priorities:
 
-1. Venue quality: peer-reviewed journal over preprint; `venue_tier=1` over `2`, `3`, or null.
-2. True relevance: core BCI/neural interface/neural decoding over broad neuroscience or incidental EEG.
-3. Information density: prefer abstracts with clear method, data/task, result, and implication.
-4. Diversity: cover different subareas when possible, such as motor imagery, SSVEP/P300, decoding methods, clinical EEG, invasive interfaces, and EEG foundation models.
-5. Version preference: when the same study appears as both formal publication and preprint, choose the formal publication.
-6. Source cap: select no more than 2 papers from any source.
+1. Scientific contribution: prefer work that advances BCI, EEG decoding, neural interfaces, neuroprosthetics, clinical EEG, or enabling methodology in a meaningful way.
+2. Innovation: prefer new paradigms, algorithms, datasets, benchmarks, devices, materials, experimental designs, or translational strategies over incremental applications.
+3. Breakthrough potential: prioritize results that could reshape a subfield, unlock a practical bottleneck, or materially improve long-term usability, performance, reliability, autonomy, scalability, or clinical translation.
+4. Team and venue signals: use author affiliations, corresponding institution, venue tier, and known institutional signals in the metadata as evidence of research-team strength. Do not invent reputation claims that are not supported by the candidate metadata.
+5. True relevance: core BCI/neural interface/neural decoding work outranks broad neuroscience or incidental EEG mentions.
+6. Evidence quality and information density: prefer abstracts with clear method, task/data, validation, result, and implication.
+7. Version preference: when the same study appears as both formal publication and preprint, choose the formal publication.
+8. Portfolio value: after ranking by quality, prefer a final set that gives useful coverage of important subareas, but never include a weaker paper merely for source or topic diversity.
 
-Use venue tier as a deterministic signal, not as the only decision. A highly relevant tier-2 paper can outrank a less relevant tier-1 paper.
+Use venue tier as one deterministic signal, not as the only decision. A breakthrough preprint or tier-2 paper can outrank a less relevant tier-1 paper, but the reason must be grounded in the abstract and metadata.
 
 ## Summary Writing
 
@@ -77,14 +79,14 @@ Write one sentence for `selection_reason`, grounded in:
 
 ## Not Enough Handling
 
-If fewer than 4 candidates are genuinely relevant and worth including:
+If fewer than 3 candidates are genuinely relevant and worth including:
 
 - Set `not_enough` to `true`.
-- Include only the candidates that pass the quality and relevance bar, even if that means `selected` has 0-3 items.
-- Explain the shortage in `notes`, for example: "Only three candidates were directly relevant to BCI/clinical EEG; the remaining pool used EEG incidentally or lacked sufficient abstract detail."
+- Include only the candidates that pass the quality and relevance bar, even if that means `selected` has 0-2 items.
+- Explain the shortage in `notes`, for example: "Only two candidates were directly relevant and strong enough to include; the remaining pool used EEG incidentally or lacked sufficient abstract detail."
 - Do not pad the list with marginal papers.
 
-If 4-6 candidates pass the bar, set `not_enough` to `false` and keep `notes` empty or use it only for source failures that affected selection.
+If 3-10 candidates pass the bar, set `not_enough` to `false` and keep `notes` empty or use it only for source failures that affected selection.
 
 ## Final Check
 
@@ -92,5 +94,5 @@ Before considering the curation complete:
 
 1. Confirm every selected `id` appears in `candidates`.
 2. Confirm no selected object contains title, authors, DOI, URL, venue, date, institution, source, or other hard metadata.
-3. Confirm no source contributes more than 2 selected papers.
+3. Confirm the final list reflects the strongest overall contribution, novelty, team/venue signal, breakthrough potential, relevance, and evidence quality.
 4. Run `scripts/validate_selection.py` from the skill directory or via an absolute path.

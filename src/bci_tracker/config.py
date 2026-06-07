@@ -31,15 +31,12 @@ def validate_config(cfg: Dict[str, Any]) -> None:
     missing = [key for key in required if key not in cfg]
     if missing:
         raise ConfigError(f"config missing required keys: {missing}")
-    if int(cfg["window_days"]) <= 0:
-        raise ConfigError("window_days must be positive")
+    if int(cfg["window_days"]) < 0:
+        raise ConfigError("window_days cannot be negative")
 
     selection = cfg["selection"]
     if selection["total_min"] > selection["total_max"]:
         raise ConfigError("selection.total_min cannot exceed selection.total_max")
-    if selection["per_source_cap"] <= 0:
-        raise ConfigError("selection.per_source_cap must be positive")
-
     output = cfg["output"]
     for key in ["dir", "candidates_filename", "final_filename"]:
         if not output.get(key):

@@ -7,7 +7,6 @@ import argparse
 import json
 import re
 import sys
-from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -109,8 +108,6 @@ def validate(args: argparse.Namespace) -> tuple[list[str], list[str]]:
             )
 
     ids: list[str] = []
-    source_counts: Counter[str] = Counter()
-
     for idx, item in enumerate(selected):
         if not isinstance(item, dict):
             errors.append(f"selected[{idx}] must be an object")
@@ -133,10 +130,6 @@ def validate(args: argparse.Namespace) -> tuple[list[str], list[str]]:
         if candidate is None:
             errors.append(f"selected[{idx}].id not found in candidates: {cid}")
             continue
-
-        source = candidate.get("source")
-        if isinstance(source, str) and source:
-            source_counts[source] += 1
 
         summary = item.get("two_sentence_summary")
         reason = item.get("selection_reason")
@@ -168,10 +161,6 @@ def validate(args: argparse.Namespace) -> tuple[list[str], list[str]]:
     if duplicate_ids:
         errors.append(f"duplicate selected ids: {duplicate_ids}")
 
-    for source, count in sorted(source_counts.items()):
-        if count > args.per_source_cap:
-            errors.append(f"source {source!r} has {count} selections; cap is {args.per_source_cap}")
-
     return errors, warnings
 
 
@@ -179,9 +168,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("candidates", type=Path, help="Path to bci_candidates_{date}.json")
     parser.add_argument("selection", type=Path, help="Path to selection_{date}.json")
-    parser.add_argument("--total-min", type=int, default=4)
-    parser.add_argument("--total-max", type=int, default=6)
-    parser.add_argument("--per-source-cap", type=int, default=2)
+    parser.add_argument("--total-min", type=int, default=3)
+    parser.add_argument("--total-max", type=int, default=10)
     parser.add_argument("--strict-numbers", action="store_true")
     args = parser.parse_args()
 

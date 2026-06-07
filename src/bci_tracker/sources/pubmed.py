@@ -25,7 +25,8 @@ class PubMedSource(Source):
         params = {
             "db": "pubmed",
             "datetype": "pdat",
-            "reldate": str(cfg.get("window_days", 7)),
+            "mindate": entrez_date(window.start),
+            "maxdate": entrez_date(window.end),
             "retmode": "json",
             "retmax": "50",
             "term": term,
@@ -46,6 +47,10 @@ class PubMedSource(Source):
         }
         detail = client.get(f"{BASE_URL}/efetch.fcgi", params=fetch_params)
         return filter_window(parse_pubmed_xml(detail.text, cfg), window)
+
+
+def entrez_date(value: date) -> str:
+    return value.strftime("%Y/%m/%d")
 
 
 def filter_window(candidates: List[Candidate], window: Window) -> List[Candidate]:
