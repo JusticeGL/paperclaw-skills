@@ -4,7 +4,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from bci_tracker.config import ConfigError, load_config
+from bci_tracker.config import ConfigError, load_config, output_dir
 from bci_tracker.dates import compute_window, parse_date
 from bci_tracker.pool import build_pool, candidate_path, dry_run_summary, write_pool
 from bci_tracker.render import RenderError, render_to_file, selection_path
@@ -34,7 +34,37 @@ def cmd_render(args: argparse.Namespace) -> int:
     output = Path(args.output) if args.output else None
     path = render_to_file(candidate_file, sel_file, cfg, output)
     print(f"wrote {path}")
+    removed = cleanup_intermediate_json(cfg, date_text, args)
+    if removed:
+        print("removed intermediate JSON: " + ", ".join(str(path) for path in removed))
     return 0
+
+
+def cleanup_intermediate_json(
+    cfg: dict,
+    date_text: str,
+    args: argparse.Namespace,
+) -> list[Path]:
+    if not cfg.get("output", {}).get("cleanup_intermediate_json", True):
+        return []
+    if args.candidates or args.selection:
+        return []
+
+    out_dir = output_dir(cfg).resolve()
+    targets = [candidate_path(cfg, date_text), selection_path(cfg, date_text)]
+    removed: list[Path] = []
+    for target in targets:
+        path = target.resolve()
+        try:
+            path.relative_to(out_dir)
+        except ValueError:
+            continue
+        try:
+            path.unlink()
+        except FileNotFoundError:
+            continue
+        removed.append(path)
+    return removed
 
 
 def build_parser() -> argparse.ArgumentParser:

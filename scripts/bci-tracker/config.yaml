@@ -1,5 +1,5 @@
 timezone: Asia/Shanghai
-window_days: 0
+window_days: 3
 
 sources:
   pubmed: true
@@ -65,3 +65,4 @@ output:
   candidates_filename: "bci_candidates_{date}.json"
   selection_filename: "selection_{date}.json"
   final_filename: "bci_papers_raw_{date}.md"
+  cleanup_intermediate_json: true

@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import html
+import re
 import urllib.parse
 import xml.etree.ElementTree as ET
+from calendar import monthrange
 from datetime import date
 from typing import Any, Dict, List
 
@@ -13,6 +15,9 @@ from bci_tracker.sources.base import Source, matched_terms
 
 
 BASE_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
+FULL_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+YEAR_MONTH_RE = re.compile(r"^(\d{4})-(\d{2})$")
+YEAR_RE = re.compile(r"^\d{4}$")
 
 
 class PubMedSource(Source):
@@ -56,10 +61,43 @@ def entrez_date(value: date) -> str:
 def filter_window(candidates: List[Candidate], window: Window) -> List[Candidate]:
     kept = []
     for candidate in candidates:
-        parsed = parse_date(candidate.published_date)
-        if parsed and window.contains(parsed):
+        if pubmed_date_matches_window(candidate.published_date, window):
             kept.append(candidate)
     return kept
+
+
+def date_ranges_overlap(start: date, end: date, window: Window) -> bool:
+    return start <= window.end and end >= window.start
+
+
+def pubmed_date_matches_window(value: str, window: Window) -> bool:
+    text = (value or "").strip()
+    if not text:
+        return True
+
+    if FULL_DATE_RE.fullmatch(text):
+        parsed = parse_date(text)
+        return bool(parsed and window.contains(parsed))
+
+    month_match = YEAR_MONTH_RE.fullmatch(text)
+    if month_match:
+        year = int(month_match.group(1))
+        month = int(month_match.group(2))
+        start = date(year, month, 1)
+        end = date(year, month, monthrange(year, month)[1])
+        return date_ranges_overlap(start, end, window)
+
+    if YEAR_RE.fullmatch(text):
+        year = int(text)
+        return date_ranges_overlap(date(year, 1, 1), date(year, 12, 31), window)
+
+    parsed = parse_date(text)
+    if parsed:
+        return window.contains(parsed)
+
+    # PubMed esearch already constrained the pdat window. If efetch only gives
+    # an imprecise MedlineDate, keep the record instead of silently dropping it.
+    return True
 
 
 def text_content(element: ET.Element | None) -> str:
@@ -73,20 +111,29 @@ def first_text(parent: ET.Element, path: str) -> str:
 
 
 def pubdate(article: ET.Element) -> str:
-    pub = article.find(".//JournalIssue/PubDate")
-    if pub is None:
-        pub = article.find(".//ArticleDate")
+    article_date = pubdate_from_node(article.find(".//ArticleDate"))
+    if FULL_DATE_RE.fullmatch(article_date):
+        return article_date
+
+    return pubdate_from_node(article.find(".//JournalIssue/PubDate")) or article_date
+
+
+def pubdate_from_node(pub: ET.Element | None) -> str:
     if pub is None:
         return ""
     year = first_text(pub, "Year")
-    month = first_text(pub, "Month") or "01"
-    day = first_text(pub, "Day") or "01"
+    month = first_text(pub, "Month")
+    day = first_text(pub, "Day")
     medline = first_text(pub, "MedlineDate")
     if year:
-        parsed = parse_date(f"{year} {month} {day}")
-        return parsed.isoformat() if parsed else year
-    parsed = parse_date(medline)
-    return parsed.isoformat() if parsed else medline
+        if month and day:
+            parsed = parse_date(f"{year} {month} {day}")
+            return parsed.isoformat() if parsed else year
+        if month:
+            parsed = parse_date(f"{year} {month}")
+            return f"{parsed.year:04d}-{parsed.month:02d}" if parsed else year
+        return year
+    return medline
 
 
 def article_ids(article: ET.Element) -> dict[str, str]:

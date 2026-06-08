@@ -8,7 +8,7 @@ description: Select, validate, and render daily BCI/EEG paper digests from deter
 ## Workflow
 
 1. Use the bundled tracker in `scripts/bci-tracker` for deterministic fetch and render work.
-2. Use `scripts/bci-tracker/config.yaml` as the default config template. It defaults to the current business date only and writes outputs to `/Users/zuqiu/Documents/claw`.
+2. Use `scripts/bci-tracker/config.yaml` as the default config template. It defaults to a 3-day business window and writes outputs to `/Users/zuqiu/Documents/claw`.
 3. Fetch candidates with the tracker:
 
    ```bash
@@ -35,6 +35,8 @@ description: Select, validate, and render daily BCI/EEG paper digests from deter
     PYTHONPATH=/path/to/skill/scripts/bci-tracker/src \
       python -m bci_tracker.cli --config /path/to/config.yaml render --date YYYY-MM-DD
     ```
+
+    A successful default render removes the intermediate candidate and selection JSON files, leaving the final Markdown in the output directory. Explicit `--candidates` or `--selection` paths are preserved for debugging.
 
 ## Boundaries
 

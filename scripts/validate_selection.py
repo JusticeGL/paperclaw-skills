@@ -15,6 +15,13 @@ ROOT_KEYS = {"date", "selected", "not_enough", "notes"}
 SELECTED_KEYS = {"id", "two_sentence_summary", "selection_reason"}
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\d+(?:[.,]\d+)*(?:%| percent)?(?![A-Za-z0-9])")
 SENTENCE_RE = re.compile(r"[^。！？.!?]+[。！？.!?]?")
+DECIMAL_DOT_RE = re.compile(r"(?<=\d)\.(?=\d)")
+ABBREVIATION_RE = re.compile(
+    r"\b(?:i\.e|e\.g|etc|vs|fig|eq|dr|mr|mrs|ms|prof|inc|ltd|corp|co|dept|univ|assoc)\.",
+    re.IGNORECASE,
+)
+INITIALISM_RE = re.compile(r"\b(?:[A-Za-z]\.){2,}")
+DOT_PLACEHOLDER = "<DOT>"
 
 
 def load_json(path: Path) -> Any:
@@ -35,8 +42,28 @@ def numbers_in(text: str) -> set[str]:
     return {norm_number(match.group(0)) for match in NUMBER_RE.finditer(text or "")}
 
 
+def mask_non_sentence_dots(text: str) -> str:
+    text = DECIMAL_DOT_RE.sub(DOT_PLACEHOLDER, text)
+    text = ABBREVIATION_RE.sub(lambda match: match.group(0).replace(".", DOT_PLACEHOLDER), text)
+    return INITIALISM_RE.sub(lambda match: mask_initialism_dots(match, text), text)
+
+
+def mask_initialism_dots(match: re.Match[str], text: str) -> str:
+    value = match.group(0)
+    next_index = match.end()
+    while next_index < len(text) and text[next_index].isspace():
+        next_index += 1
+    if next_index < len(text) and text[next_index].islower():
+        return value.replace(".", DOT_PLACEHOLDER)
+    return value[:-1].replace(".", DOT_PLACEHOLDER) + value[-1]
+
+
 def sentence_count(text: str) -> int:
-    parts = [part.strip() for part in SENTENCE_RE.findall(text or "") if part.strip()]
+    parts = [
+        part.strip()
+        for part in SENTENCE_RE.findall(mask_non_sentence_dots(text or ""))
+        if part.strip()
+    ]
     return len(parts)
 
 
