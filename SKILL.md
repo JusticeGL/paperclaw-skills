@@ -20,7 +20,7 @@ description: Select, validate, and render daily BCI/EEG paper digests from deter
 5. Read `references/curation-rules.md` before ranking candidates.
 6. Select 3-10 genuinely relevant papers when enough exist. Do not impose a per-source quota; compare all papers together by scientific contribution, innovation, team/reputation signals visible in the metadata, breakthrough potential, field relevance, and abstract quality.
 7. Write `selection_{date}.json` next to the candidate file unless the user gives another output path.
-8. Put only `date`, `selected`, `not_enough`, and `notes` at the selection root. In each `selected[]` item, put only `id`, `two_sentence_summary`, and `selection_reason`.
+8. Put only `date`, `selected`, `not_enough`, and `notes` at the selection root. In each `selected[]` item, put only `id`, `two_sentence_summary`, and `selection_reason`. Write `two_sentence_summary`, `selection_reason`, and any shortage `notes` in Chinese; keep original titles, author names, venues, DOI, URLs, and technical terms unchanged.
 9. Validate the selection:
 
    ```bash
@@ -44,6 +44,7 @@ description: Select, validate, and render daily BCI/EEG paper digests from deter
 - Do not invent or overwrite authors, institutions, DOI, URLs, venues, dates, or quantitative results.
 - Let `bci-tracker render` fill all hard metadata from the candidate pool.
 - Base summaries strictly on each candidate's `abstract`.
+- Write generated summaries, selection reasons, and shortage notes in Chinese.
 - Do not add numbers, claims, outcomes, sample sizes, accuracy, effect sizes, or clinical-readiness claims unless they appear in the abstract.
 - Set `not_enough=true` when fewer than 3 candidates are genuinely relevant and worth including. Do not pad the list with weak papers.
 

@@ -21,8 +21,8 @@ Write JSON in this shape:
   "selected": [
     {
       "id": "candidate-id",
-      "two_sentence_summary": "Sentence one states what was done. Sentence two states the main result, contribution, or implication from the abstract.",
-      "selection_reason": "One sentence explaining quality, relevance, or representativeness."
+      "two_sentence_summary": "第一句用中文说明论文做了什么。第二句用中文说明摘要支持的主要结果、贡献或意义。",
+      "selection_reason": "用一句中文说明入选原因。"
     }
   ],
   "not_enough": false,
@@ -32,6 +32,7 @@ Write JSON in this shape:
 
 Root keys are limited to `date`, `selected`, `not_enough`, and `notes`.
 Selected item keys are limited to `id`, `two_sentence_summary`, and `selection_reason`.
+Write `two_sentence_summary`, `selection_reason`, and shortage `notes` in Chinese. Keep original paper titles, author names, DOI, URLs, venue names, and technical terms unchanged when they appear in metadata.
 
 ## Eligibility
 
@@ -63,13 +64,13 @@ Use venue tier as one deterministic signal, not as the only decision. A breakthr
 
 Write exactly two sentences for `two_sentence_summary`.
 
-- Sentence 1: what the paper did, including method/task/population only when stated in the abstract.
-- Sentence 2: key result, contribution, or implication only when stated or directly supported by the abstract.
+- Sentence 1, in Chinese: what the paper did, including method/task/population only when stated in the abstract.
+- Sentence 2, in Chinese: key result, contribution, or implication only when stated or directly supported by the abstract.
 - Do not introduce numeric values unless the same numeric value appears in the abstract.
 - Do not claim clinical readiness, superiority, benchmark leadership, sample sizes, accuracy, or effect sizes unless the abstract explicitly says so.
 - If the abstract is vague, write a cautious summary rather than filling gaps.
 
-Write one sentence for `selection_reason`, grounded in:
+Write one Chinese sentence for `selection_reason`, grounded in:
 
 - venue quality,
 - direct BCI/EEG relevance,
@@ -83,7 +84,7 @@ If fewer than 3 candidates are genuinely relevant and worth including:
 
 - Set `not_enough` to `true`.
 - Include only the candidates that pass the quality and relevance bar, even if that means `selected` has 0-2 items.
-- Explain the shortage in `notes`, for example: "Only two candidates were directly relevant and strong enough to include; the remaining pool used EEG incidentally or lacked sufficient abstract detail."
+- Explain the shortage in Chinese `notes`, for example: "只有两篇候选论文与 BCI/EEG 直接相关且质量足够；其余论文只是附带提到 EEG 或摘要信息不足。"
 - Do not pad the list with marginal papers.
 
 If 3-10 candidates pass the bar, set `not_enough` to `false` and keep `notes` empty or use it only for source failures that affected selection.
@@ -94,5 +95,6 @@ Before considering the curation complete:
 
 1. Confirm every selected `id` appears in `candidates`.
 2. Confirm no selected object contains title, authors, DOI, URL, venue, date, institution, source, or other hard metadata.
-3. Confirm the final list reflects the strongest overall contribution, novelty, team/venue signal, breakthrough potential, relevance, and evidence quality.
-4. Run `scripts/validate_selection.py` from the skill directory or via an absolute path.
+3. Confirm all generated prose fields are written in Chinese.
+4. Confirm the final list reflects the strongest overall contribution, novelty, team/venue signal, breakthrough potential, relevance, and evidence quality.
+5. Run `scripts/validate_selection.py` from the skill directory or via an absolute path.

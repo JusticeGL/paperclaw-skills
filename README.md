@@ -11,6 +11,7 @@ The skill uses deterministic Python code to fetch and render paper metadata, whi
 - Asks the agent to select 3-10 papers by contribution, novelty, team/venue signal, breakthrough potential, relevance, and evidence quality.
 - Validates the selection JSON before rendering.
 - Renders the final digest to `/Users/zuqiu/Documents/claw`.
+- Requires generated summaries, selection reasons, and shortage notes to be written in Chinese.
 - Deletes intermediate JSON files after a successful default render, leaving only the final Markdown.
 
 ## Repository Layout
@@ -145,6 +146,7 @@ When using this skill, the agent must follow these rules:
 - Set `not_enough: true` when fewer than 3 candidates are worth including.
 - Write only these root keys in selection JSON: `date`, `selected`, `not_enough`, `notes`.
 - Write only these selected-item keys: `id`, `two_sentence_summary`, `selection_reason`.
+- Write `two_sentence_summary`, `selection_reason`, and shortage `notes` in Chinese.
 - Validate before rendering.
 
 ## Build The `.skill` Package

@@ -15,6 +15,7 @@ ROOT_KEYS = {"date", "selected", "not_enough", "notes"}
 SELECTED_KEYS = {"id", "two_sentence_summary", "selection_reason"}
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\d+(?:[.,]\d+)*(?:%| percent)?(?![A-Za-z0-9])")
 SENTENCE_RE = re.compile(r"[^。！？.!?]+[。！？.!?]?")
+CJK_RE = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff]")
 DECIMAL_DOT_RE = re.compile(r"(?<=\d)\.(?=\d)")
 ABBREVIATION_RE = re.compile(
     r"\b(?:i\.e|e\.g|etc|vs|fig|eq|dr|mr|mrs|ms|prof|inc|ltd|corp|co|dept|univ|assoc)\.",
@@ -40,6 +41,10 @@ def norm_number(token: str) -> str:
 
 def numbers_in(text: str) -> set[str]:
     return {norm_number(match.group(0)) for match in NUMBER_RE.finditer(text or "")}
+
+
+def contains_chinese(text: str) -> bool:
+    return bool(CJK_RE.search(text or ""))
 
 
 def mask_non_sentence_dots(text: str) -> str:
@@ -126,6 +131,8 @@ def validate(args: argparse.Namespace) -> tuple[list[str], list[str]]:
             )
         if not notes:
             errors.append("notes must explain the shortage when not_enough=true")
+        elif not contains_chinese(notes):
+            errors.append("notes must be written in Chinese when not_enough=true")
         if len(selected) > args.total_max:
             errors.append(f"selected count {len(selected)} exceeds total_max={args.total_max}")
     else:
@@ -169,8 +176,12 @@ def validate(args: argparse.Namespace) -> tuple[list[str], list[str]]:
 
         if summary and sentence_count(summary) != 2:
             errors.append(f"selected[{idx}].two_sentence_summary must contain exactly two sentences")
+        if summary and not contains_chinese(summary):
+            errors.append(f"selected[{idx}].two_sentence_summary must be written in Chinese")
         if reason and sentence_count(reason) != 1:
             errors.append(f"selected[{idx}].selection_reason must contain exactly one sentence")
+        if reason and not contains_chinese(reason):
+            errors.append(f"selected[{idx}].selection_reason must be written in Chinese")
 
         abstract_numbers = numbers_in(candidate.get("abstract", ""))
         summary_numbers = numbers_in(summary)
